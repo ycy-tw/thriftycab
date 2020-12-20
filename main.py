@@ -35,24 +35,59 @@ def start_click_searching():
     default_variable = StringVar(window)
     default_variable.set(Location_suggestions[0]) # default value
     Location_suggestions_dropdown_list = OptionMenu(window, default_variable, *Location_suggestions)
-    Location_suggestions_dropdown_list.place(x=400, y= 400)
+    Location_suggestions_dropdown_list.place(x=495, y= 309)
+
+def arrive_click_searching():
+
+    global start_entry
+
+    keywords = arrive_entry.get()
+    crawler = Crawler()
+    Location_suggestions = crawler.location_suggestions(keywords)
+
+    default_variable = StringVar(window)
+    default_variable.set(Location_suggestions[0]) # default value
+    Location_suggestions_dropdown_list = OptionMenu(window, default_variable, *Location_suggestions)
+    Location_suggestions_dropdown_list.place(x=495, y= 369)
 
 
 window = tk.Tk()
 window.title('Thrifty Cab')
 # window = iconbitmap
 window.geometry('800x600')
+window.configure(bg='floral white')
 window.resizable(height='False', width='False')
 
-# frm_ask = tk.Frame()
-# frm_ask.pack()
-# lbl_ask = tk.Label(master=frm_ask, text = 'Where to?', font=("Telugu MN", 35, 'bold italic'))
-# lbl_ask.pack(side=tk.TOP)
+lbl_title = tk.Label(text = 'Thrifty Cab', font=("Telugu MN", 100, 'bold italic'), bg='floral white')
+lbl_title.place(x=110, y=150)
 
-# frm_1 = tk.Frame()
-# frm_1.place(x=170, y=50)
-# lbl_1 = tk.Label(master=frm_1, text = 'Pickup Location', font = ("Telugu MN", 16))
-# lbl_1.pack()
+frm_start = tk.Frame(width=760, height=40, background="bisque")
+frm_start.place(x=20, y=300)
+lbl_start = tk.Label(text = 'Pickup Location', font = ("Telugu MN", 20), bg="bisque")
+lbl_start.place(x=28, y=302)
+start_entry = tk.Entry(bg="gray88", relief=GROOVE, width=18,)#,textvariable=v
+start_entry.place(x=185, y=306)
+start_entry.config(highlightbackground="bisque")
+search_button = Button(text='search', width=3, relief=GROOVE, command=start_click_searching)
+search_button.place(x=360, y=305)
+search_button.config(highlightbackground="bisque")
+clear_button = Button(text='clear', width=3, relief=GROOVE) #command=
+clear_button.place(x=423, y=305)
+clear_button.config(highlightbackground="bisque")
+
+frm_arrive = tk.Frame(width=760, height=40, background="bisque")
+frm_arrive.place(x=20, y=360)
+lbl_arrive = tk.Label(text = 'Where to?', font = ("Telugu MN", 20), bg="bisque")
+lbl_arrive.place(x=50, y=362)
+arrive_entry = tk.Entry(bg="gray88", relief=GROOVE, width=18,)#,textvariable=v
+arrive_entry.place(x=185, y=366)
+arrive_entry.config(highlightbackground="bisque")
+search_button = Button(text='search', width=3, relief=RAISED, command=arrive_click_searching)
+search_button.place(x=360, y=365)
+search_button.config(highlightbackground="bisque")
+clear_button = Button(text='clear', width=3, relief=GROOVE) #command=
+clear_button.place(x=423, y=365)
+clear_button.config(highlightbackground="bisque")
 
 # ent1 = tk.Entry(width=30)
 # ent1.place(x=300, y=50)
@@ -67,11 +102,7 @@ window.resizable(height='False', width='False')
 # ent2 = tk.Entry(width=30)
 # ent2.place(x=300, y=80)
 
-start_entry = tk.Entry(bg="gray", relief=GROOVE, width=20)#,textvariable=v
-start_entry.place(x=300, y=300)
 
-search_button = Button(text='搜尋', width=8, relief=GROOVE, command=start_click_searching)
-search_button.place(x=400, y=300)
 
 
 window.mainloop()
