@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from PIL import ImageTk
-#from crawler import Crawler
+from crawler import Crawler
 
 
 def estimate_all(start_loc, stop_loc):
