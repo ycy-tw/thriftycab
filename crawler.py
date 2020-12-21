@@ -154,7 +154,7 @@ class Crawler:
             
         return uber_offer_price, uber_coordinates, start_choice_name, stop_choice_name
 
-    def line_taxi(start_choice_name, stop_choice_name, line_id, line_password)
+    def line_taxi(start_choice_name, stop_choice_name, line_id, line_password):
         options = Options()
         options.add_argument("--disable-notifications")
 
