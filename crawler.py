@@ -365,7 +365,9 @@ class Crawler:
         LINE_TAXI_PLUS = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[0].text
         LINE_TAXI = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[1].text
 
-        return LINE_TAXI_PLUS, LINE_TAXI
+        index = LINE_TAXI.find('~')
+        lowest = LINE_TAXI[:index]
+        return lowest
 
 
 
