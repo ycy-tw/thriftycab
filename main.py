@@ -39,7 +39,7 @@ def start_click_searching():
 
 def arrive_click_searching():
 
-    global start_entry
+    global arrive_entry
 
     keywords = arrive_entry.get()
     crawler = Crawler()
@@ -57,9 +57,11 @@ window.geometry('800x600')
 window.configure(bg='floral white')
 window.resizable(height='False', width='False')
 
+# 標題
 lbl_title = tk.Label(text = 'Thrifty Cab', font=("Telugu MN", 100, 'bold italic'), bg='floral white')
 lbl_title.place(x=110, y=150)
 
+# 起始點
 frm_start = tk.Frame(width=760, height=40, background="bisque")
 frm_start.place(x=20, y=300)
 lbl_start = tk.Label(text = 'Pickup Location', font = ("Telugu MN", 20), bg="bisque")
@@ -71,7 +73,7 @@ search_button = Button(text='search', width=3, relief=GROOVE, command=start_clic
 search_button.place(x=360, y=305)
 search_button.config(highlightbackground="bisque")
 
-
+# 終點
 frm_arrive = tk.Frame(width=760, height=40, background="bisque")
 frm_arrive.place(x=20, y=360)
 lbl_arrive = tk.Label(text = 'Where to?', font = ("Telugu MN", 20), bg="bisque")
