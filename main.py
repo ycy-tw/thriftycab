@@ -35,7 +35,7 @@ def start_click_searching():
     default_variable = StringVar(window)
     default_variable.set(Location_suggestions[0]) # default value
     Location_suggestions_dropdown_list = OptionMenu(window, default_variable, *Location_suggestions)
-    Location_suggestions_dropdown_list.place(x=495, y= 309)
+    Location_suggestions_dropdown_list.place(x=423, y= 309)
 
 def arrive_click_searching():
 
@@ -48,7 +48,7 @@ def arrive_click_searching():
     default_variable = StringVar(window)
     default_variable.set(Location_suggestions[0]) # default value
     Location_suggestions_dropdown_list = OptionMenu(window, default_variable, *Location_suggestions)
-    Location_suggestions_dropdown_list.place(x=495, y= 369)
+    Location_suggestions_dropdown_list.place(x=423, y= 369)
 
 
 window = tk.Tk()
@@ -71,9 +71,9 @@ start_entry.config(highlightbackground="bisque")
 search_button = Button(text='search', width=3, relief=GROOVE, command=start_click_searching)
 search_button.place(x=360, y=305)
 search_button.config(highlightbackground="bisque")
-clear_button = Button(text='clear', width=3, relief=GROOVE) #command=
-clear_button.place(x=423, y=305)
-clear_button.config(highlightbackground="bisque")
+# clear_button = Button(text='clear', width=3, relief=GROOVE) #command=
+# clear_button.place(x=423, y=305)
+# clear_button.config(highlightbackground="bisque")
 
 frm_arrive = tk.Frame(width=760, height=40, background="bisque")
 frm_arrive.place(x=20, y=360)
@@ -85,9 +85,9 @@ arrive_entry.config(highlightbackground="bisque")
 search_button = Button(text='search', width=3, relief=RAISED, command=arrive_click_searching)
 search_button.place(x=360, y=365)
 search_button.config(highlightbackground="bisque")
-clear_button = Button(text='clear', width=3, relief=GROOVE) #command=
-clear_button.place(x=423, y=365)
-clear_button.config(highlightbackground="bisque")
+# clear_button = Button(text='clear', width=3, relief=GROOVE) #command=
+# clear_button.place(x=423, y=365)
+# clear_button.config(highlightbackground="bisque")
 
 # ent1 = tk.Entry(width=30)
 # ent1.place(x=300, y=50)
