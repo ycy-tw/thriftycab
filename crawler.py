@@ -203,8 +203,8 @@ class Crawler:
         stop_loc = stop_choice_name
 
         for w in start_loc:
-        start.send_keys(w)
-        time.sleep(1)
+            start.send_keys(w)
+            time.sleep(1)
 
         # 點選最接近地點
         time.sleep(3)
