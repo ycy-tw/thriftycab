@@ -292,6 +292,86 @@ class Crawler:
         Metro_fare = (Metro_output['fare_info'][0]['max_fare'] +Metro_output['fare_info'][0]['min_fare']) / 2
         return Metro_fare, uber_coordinates, start_choice_name, stop_choice_name
 
+    def line_taxi(start_choice_name, stop_choice_name, line_id, line_password):
+        options = Options()
+        options.add_argument("--disable-notifications")
+
+        chrome = webdriver.Chrome('./chromedriver', chrome_options=options)
+        chrome.get("https://app.taxigo.com.tw/")
+
+        time.sleep(3)
+    
+        Email = chrome.find_element_by_name("tid")
+        Password = chrome.find_element_by_name("tpasswd")
+
+        time.sleep(3)
+        Email.send_keys(line_id)
+        Password.send_keys(line_password)
+        Password.submit()
+
+        time.sleep(3)
+        code_for_phone = chrome.find_element_by_class_name("mdMN06Number").text
+        print('請到手機上輸入', code_for_phone)
+
+        enter_yet = False
+        while enter_yet != True:
+            time.sleep(5)
+            try:
+            # 登入
+                Email = chrome.find_element_by_name("tid")
+                Password = chrome.find_element_by_name("tpasswd")
+
+                Email.send_keys(line_id)
+                Password.send_keys(line_password)
+                Password.submit()
+                enter_yet = True
+
+            except:
+                print('請到手機上輸入', code_for_phone)
+                pass
+        time.sleep(10)
+        enter_adress_button = chrome.find_elements_by_xpath('//span[@class="null"]')[0]
+        ActionChains(chrome).move_to_element(enter_adress_button).click().perform()
+
+        time.sleep(3)
+        start = chrome.find_element_by_css_selector("input[placeholder='上車地點']")
+        stop = chrome.find_element_by_css_selector("input[placeholder='下車地點']")
+
+        start_loc = start_choice_name
+        stop_loc = stop_choice_name
+
+        for w in start_loc:
+            start.send_keys(w)
+            time.sleep(1)
+
+        # 點選最接近地點
+        time.sleep(3)
+        choice1 = chrome.find_elements_by_xpath('//div[@class="address-title-des subtitle_01"][@data-index="0"]')[1]
+        ActionChains(chrome).move_to_element(choice1).click().perform()
+
+        time.sleep(3)
+
+        # 緩慢輸入
+        for w in stop_loc:
+            stop.send_keys(w)
+            time.sleep(1)
+    
+        # 點選最接近地點
+        time.sleep(3)
+        choice1 = chrome.find_elements_by_xpath('//div[@class="address-title-des subtitle_01"][@data-index="0"]')[1]
+        ActionChains(chrome).move_to_element(choice1).click().perform()
+
+        time.sleep(3)
+        LINE_TAXI_PLUS = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[0].text
+        LINE_TAXI = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[1].text
+
+        if LINE_TAXI_PLUS <= LINE_TAXI:
+            best_price = LINE_TAXI_PLUS
+        else:
+            best_price = LINE_TAXI
+
+        return best_price
+
 
 
 
