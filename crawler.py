@@ -365,12 +365,7 @@ class Crawler:
         LINE_TAXI_PLUS = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[0].text
         LINE_TAXI = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[1].text
 
-        if LINE_TAXI_PLUS <= LINE_TAXI:
-            best_price = LINE_TAXI_PLUS
-        else:
-            best_price = LINE_TAXI
-
-        return best_price
+        return LINE_TAXI_PLUS, LINE_TAXI
 
 
 
