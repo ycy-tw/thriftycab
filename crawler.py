@@ -183,8 +183,8 @@ class Crawler:
                 Email = chrome.find_element_by_name("tid")
                 Password = chrome.find_element_by_name("tpasswd")
 
-                Email.send_keys('yucheng0720@yahoo.com.tw')
-                Password.send_keys('cat7139aa')
+                Email.send_keys(line_id)
+                Password.send_keys(line_password)
                 Password.submit()
                 enter_yet = True
 
