@@ -379,7 +379,91 @@ class Crawler:
         return lowest
 
 
+def tw_taxi(self, uber_address_name):
+    import requests
+    import urllib.request
+    import numpy
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.common.action_chains import ActionChains
 
+    # 避免彈出視窗
+    options = Options()
+    options.add_argument("--disable-notifications")
+    #options.add_argument("--headless") #不要彈出視窗的話，就執行這兩行
+    #options.add_argument("--disable-gpu")
+
+    # 開啟Chrome 進入登入頁面
+    chrome = webdriver.Chrome('/Users/kikichen/Desktop/109-1Python/python_project/chromedriver', options=options)
+    chrome.get("https://wds.taiwantaxi.com.tw/")
+
+    # 取得驗證碼
+    valid_code = [ck['value'] for ck in chrome.get_cookies()][1]
+
+    # 定位要輸入的欄位
+    phone_number = chrome.find_element_by_css_selector("input[placeholder='手機號碼']")
+    pwd = chrome.find_element_by_css_selector("input[placeholder='密碼']")
+    validcode = chrome.find_element_by_css_selector("input[placeholder='請輸入驗證碼']")      
+
+    # 在欄位中輸入資料
+    phone_number.send_keys('0933835850')
+    pwd.send_keys('a0933835')
+    validcode.send_keys(valid_code)
+
+    # 登入
+    enter_adress_button = chrome.find_elements_by_xpath('//button[@id="btnLOGIN"]')[0]
+    ActionChains(chrome).move_to_element(enter_adress_button).click().perform()
+
+    # 再次取得cookie 為了等下操作api使用
+    tw_ck = chrome.get_cookies()
+    tw_cookie = ';'.join(['{}={}'.format(item.get('name'), item.get('value')) for item in tw_ck]).encode('utf-8')
+
+    # requests的參數
+    headers = {
+                'accept': '*/*',
+                'accept-encoding': 'gzip, deflate, br',
+                'accept-language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+                'content-length': '154',
+                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'cookie': tw_cookie,
+                'origin': 'https://wds.taiwantaxi.com.tw',
+                'referer': 'https://wds.taiwantaxi.com.tw/APPS/Booking/New_CostEstimates.aspx?a=a',
+                'sec-fetch-dest': 'empty',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-site': 'same-origin',
+                'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+                'x-requested-with': 'XMLHttpRequest',
+
+            }
+    # 測試用：uber_address_name = {'start':['台北市中正區羅斯福路四段92號', '水源市場'],'stop':['台北市中正區中山南路21號', '中正紀念堂']}
+    start_location = uber_address_name['start'][0] + ", " + uber_address_name['start'][1]
+    stop_location = uber_address_name['stop'][0] + ", " + uber_address_name['stop'][1]
+    payload = {
+                'DOMODE': 'CostEstimates',
+                'OnAddr': start_location,
+                'OffAddr': stop_location,
+            }
+
+    # 送出參數取得估算結果
+    url = 'https://wds.taiwantaxi.com.tw/APPS/Booking/New_CostEstimates.aspx?'
+    res = requests.post(url, headers=headers, data= payload)
+    
+    # 取得查詢時的時間（幾點鐘），看要以日間還是夜間計費（23:00~06:00算夜間）
+    import time
+    strings = time.strftime("%Y,%m,%d,%H,%M,%S")
+    t = strings.split(',')
+    numbers = [ int(x) for x in t ]
+    hour = numbers[3]
+
+    # 印出結果
+    # print(res.text)  (可查看整頁程式碼)
+    # 原本結果為區間因此取兩數值的平均值
+    if 6 <= hour < 23:
+        averagefee = (float(res.json()['FareA']) + float(res.json()['FareB'])) / 2
+    else:
+        averagefee = (float(res.json()['NightFareA']) + float(res.json()['NightFareB'])) / 2
+    # print(averagefee)
+    return averagefee
 
 
 
