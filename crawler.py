@@ -103,13 +103,6 @@ class Crawler:
         # 取得估價結果
         offers = chrome.find_elements_by_xpath('//div[@tabindex="0"]')
         offers = [o.text for o in offers if o.text.find('$') != -1]
-        
-        # 回傳全部乘車方案
-        # uber_offers = {}
-        # for i in range(len(offers)):
-        #     offer_name = offers[i].split('\n')[0]
-        #     offer_price = float(offers[i].split('\n')[1].replace('$','').replace(',',''))
-        #     uber_offers[offer_name] = offer_price
 
         # 乘車方案和名稱
         uber_offer_name = offers[0].split('\n')[0]
@@ -123,8 +116,9 @@ class Crawler:
         # 利用剛取得起點跟終點的cookie來抓座標軸
         uber_ck_data = {'start':[start_cookie, start_id], 'stop':[stop_cookie, stop_id]}
         uber_coordinates = {}
+        uber_address_name = {}
 
-        # 座標軸爬取過程
+        # 座標軸, 確切地址, 地點名稱的爬取過程
         for k, v in uber_ck_data.items():
 
             headers = {
@@ -148,11 +142,17 @@ class Crawler:
             url = 'https://www.uber.com/api/loadFEPlaceDetails?localeCode=zh-TW'
             res = requests.post(url, data=payload, headers= headers)
 
+            # 紀錄座標軸 for 大都會
             lat = res.json()['data']['lat']
             lng = res.json()['data']['long']
             uber_coordinates[k] = [lng, lat]
-            
-        return uber_offer_price, uber_coordinates, start_choice_name, stop_choice_name
+
+            # 紀錄完整地址和地點名稱 for 台灣大車隊
+            full_address = res.json()['data']['addressLine1']
+            destination_name = res.json()['data']['addressLine2']
+            uber_address_name[k] = [full_address, destination_name]
+
+        return uber_offer_price, uber_coordinates, start_choice_name, stop_choice_name, uber_address_name
 
 
     #def m_taxi(self, start_loc, stop_loc, start_choice=0, stop_choice=0):
