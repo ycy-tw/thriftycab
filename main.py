@@ -63,7 +63,7 @@ def thrifty_searching():
 # 視窗頁面
 window = tk.Tk()
 window.title('Thrifty Cab')
-window.geometry('800x600')
+window.geometry('1000x750')
 window.configure(bg='floral white')
 window.resizable(height='False', width='False')
 
@@ -96,7 +96,7 @@ search_button.place(x=360, y=365)
 search_button.config(highlightbackground="bisque")
 
 # 'Thrifty' button
-thrifty_btn = Button(width=10, height=1, text='Thrifty!', relief=GROOVE, font = ("Telugu MN", 20), bg='snow')
+thrifty_btn = Button(width=10, height=1, text='Thrifty!', relief=GROOVE, font = ("Telugu MN", 20), bg='snow', command=thrifty_searching)
 thrifty_btn.place(x=330, y=420)
 thrifty_btn.config(highlightbackground='floral white')
 
