@@ -41,6 +41,7 @@ def start_click_searching():
     start_location_suggestions_dropdown_list = OptionMenu(window, default_variable, *start_location_suggestions)
     start_location_suggestions_dropdown_list.place(x=423, y= 309)
 
+
 def arrive_click_searching():
 
     global arrive_entry
@@ -58,9 +59,10 @@ def arrive_click_searching():
     arrive_location_suggestions_dropdown_list = OptionMenu(window, default_variable, *arrive_location_suggestions)
     arrive_location_suggestions_dropdown_list.place(x=423, y= 369)
 
+
 def thrifty_searching(event):
-    start_location = search_start.get()
-    arrive_location = search_arrive.get()
+    start_loc = start_location_suggestions_dropdown_list.get()
+    stop_loc = arrive_location_suggestions_dropdown_list.get()
 
 # 視窗頁面
 window = tk.Tk()
@@ -84,8 +86,7 @@ start_entry.config(highlightbackground="bisque")
 search_button = Button(text='search', width=3, relief=GROOVE, command=start_click_searching)
 search_button.place(x=360, y=305)
 search_button.config(highlightbackground="bisque")
-search_start = StringVar()
-search_start.set(start_location_suggestions_dropdown_list[0])
+
 
 # 終點
 frm_arrive = tk.Frame(width=760, height=40, background="bisque")
@@ -98,8 +99,7 @@ arrive_entry.config(highlightbackground="bisque")
 search_button = Button(text='search', width=3, relief=GROOVE, command=arrive_click_searching)
 search_button.place(x=360, y=365)
 search_button.config(highlightbackground="bisque")
-search_arrive = StringVar()
-search_arrive.set(arrive_location_suggestions_dropdown_list[0])
+
 
 
 # 'Thrifty' button
