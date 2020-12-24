@@ -33,10 +33,12 @@ def start_click_searching():
     keywords = start_entry.get()
     crawler = Crawler()
     start_location_suggestions = crawler.location_suggestions(keywords)
+
     try:
         start_location_suggestions_dropdown_list.destroy()
     except:
         pass
+
     start_default_variable = StringVar(window)
     start_default_variable.set(start_location_suggestions[0]) # default value
     start_location_suggestions_dropdown_list = OptionMenu(window, start_default_variable, *start_location_suggestions)
@@ -52,19 +54,37 @@ def arrive_click_searching():
     keywords = arrive_entry.get()
     crawler = Crawler()
     arrive_location_suggestions = crawler.location_suggestions(keywords)
+
     try:
         arrive_location_suggestions_dropdown_list.destroy()
     except:
         pass
+
     arrive_default_variable = StringVar(window)
     arrive_default_variable.set(arrive_location_suggestions[0]) # default value
     arrive_location_suggestions_dropdown_list = OptionMenu(window, arrive_default_variable, *arrive_location_suggestions)
     arrive_location_suggestions_dropdown_list.place(x=423, y= 369)
 
 
-def thrifty_searching():
-    start_loc = start_default_variable.get()
-    stop_loc = arrive_default_variable.get()
+def thrifty_searching(start_loc=start_default_variable.get(), stop_loc=arrive_default_variable.get()):
+
+    estimate = Crawler()
+
+    # Uber的結果
+    uber_result = estimate.uber_taxi(start_loc, stop_loc)
+
+    # 把uber回傳的資源賦值
+    uber_taxi_price = uber_result[0]
+    coordinates = uber_result[1]
+    start_choice_name = uber_result[2]
+    stop_choice_name = uber_result[3]
+
+    # 帶入其他function中估算車資
+    line_taxi_price = estimate.lin_taxi(start_loc, stop_loc, name, pwd)
+    tw_taxi_price = estimate.uber_taxi(coordinates, start_choice_name, stop_choice_name)
+    city_price = estimate.city(coordinates)
+
+    return uber_taxi_price, line_taxi_price, tw_taxi_price, city_price
 
 
 # 視窗頁面
