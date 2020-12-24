@@ -85,8 +85,14 @@ class MainPage():
         city_price = estimate.m_taxi(coordinates)
         print('city成功', city_price)
 
-        line_taxi_price = estimate.line_taxi(start_loc, stop_loc, mail, pwd)
-        print('line成功', line_taxi_price)
+        if len(mail) != 0:
+
+            line_taxi_price = estimate.line_taxi(start_loc, stop_loc, mail, pwd)
+            print('line成功', line_taxi_price)
+
+        else:
+            line_taxi_price = 0
+            print('使用者不用line', line_taxi_price)
 
         firm_list = ['Uber', 'LINE', 'TW', 'Metro']
         price_list = [uber_taxi_price, line_taxi_price, tw_taxi_price, city_price]
@@ -98,15 +104,22 @@ class MainPage():
         # 把結果由小到大排序
         result = sorted(list(result), key=lambda x: (x[1]))
 
+        # 把沒結果(結果為0)的估計車資改成無估計車資
         for i in range(len(result)):
 
+            firm = result[i][0]
+            fare = result[i][1]
+
+            if fare == 0:
+                fare = '無估計車資'
+
             # 由小到大呈現在畫面上
-            self.firm_name = Label(text=result[i][0], font = ("Telugu MN", 20), bg="bisque")
+            self.firm_name = Label(text=firm, font = ("Telugu MN", 20), bg="bisque")
             self.firm_name.place(x= 100, y= 400  + i*20)
 
             self.estimate_price = Label(text=result[i][1], font = ("Telugu MN", 20), bg="bisque")
             self.estimate_price.place(x= 120, y= 400  + i*20)
-
+            
 
     def CreatePage(self):
 
