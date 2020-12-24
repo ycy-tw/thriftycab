@@ -28,6 +28,7 @@ def start_click_searching():
 
     global start_entry
     global start_location_suggestions_dropdown_list
+    global start_default_variable
 
     keywords = start_entry.get()
     crawler = Crawler()
@@ -36,9 +37,9 @@ def start_click_searching():
         start_location_suggestions_dropdown_list.destroy()
     except:
         pass
-    default_variable = StringVar(window)
-    default_variable.set(start_location_suggestions[0]) # default value
-    start_location_suggestions_dropdown_list = OptionMenu(window, default_variable, *start_location_suggestions)
+    start_default_variable = StringVar(window)
+    start_default_variable.set(start_location_suggestions[0]) # default value
+    start_location_suggestions_dropdown_list = OptionMenu(window, start_default_variable, *start_location_suggestions)
     start_location_suggestions_dropdown_list.place(x=423, y= 309)
 
 
@@ -46,6 +47,7 @@ def arrive_click_searching():
 
     global arrive_entry
     global arrive_location_suggestions_dropdown_list
+    global arrive_default_variable
 
     keywords = arrive_entry.get()
     crawler = Crawler()
@@ -54,15 +56,16 @@ def arrive_click_searching():
         arrive_location_suggestions_dropdown_list.destroy()
     except:
         pass
-    default_variable = StringVar(window)
-    default_variable.set(arrive_location_suggestions[0]) # default value
-    arrive_location_suggestions_dropdown_list = OptionMenu(window, default_variable, *arrive_location_suggestions)
+    arrive_default_variable = StringVar(window)
+    arrive_default_variable.set(arrive_location_suggestions[0]) # default value
+    arrive_location_suggestions_dropdown_list = OptionMenu(window, arrive_default_variable, *arrive_location_suggestions)
     arrive_location_suggestions_dropdown_list.place(x=423, y= 369)
 
 
-def thrifty_searching(event):
-    start_loc = start_location_suggestions_dropdown_list.get()
-    stop_loc = arrive_location_suggestions_dropdown_list.get()
+def thrifty_searching():
+    start_loc = start_default_variable.get()
+    stop_loc = arrive_default_variable.get()
+
 
 # 視窗頁面
 window = tk.Tk()
