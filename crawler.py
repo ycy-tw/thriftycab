@@ -8,6 +8,7 @@ import json
 import time
 import urllib.request
 import numpy
+from tkinter import messagebox 
 
 
 class Crawler:
@@ -233,6 +234,7 @@ class Crawler:
         while enter_yet != True:
 
             time.sleep(5)
+            messagebox.showinfo("驗證碼", "請到您手機上輸入:"+str(code_for_phone)) 
 
             try:
             # 登入
@@ -245,7 +247,6 @@ class Crawler:
                 enter_yet = True
 
             except:
-                print('請到手機上輸入', code_for_phone)
                 pass
 
         time.sleep(5)

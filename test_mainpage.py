@@ -39,7 +39,7 @@ class MainPage():
     def arrive_click_searching(self):
 
         # global arrive_entry
-        global arrive_location_suggestions_dropdown_list
+        # global arrive_location_suggestions_dropdown_list
         # global arrive_default_variable
 
         keywords = self.arrive_entry.get()
@@ -61,6 +61,7 @@ class MainPage():
 
         start_loc = self.start_default_variable.get()
         stop_loc = self.arrive_default_variable.get()
+
         mail = self.mail
         pwd = self.pwd
 
@@ -78,13 +79,7 @@ class MainPage():
 
         print('uebr成功', uber_taxi_price)
 
-        # 帶入其他function中估算車資
-        tw_taxi_price = estimate.tw_taxi(uber_address_name)
-        print('tw成功', tw_taxi_price)
-
-        city_price = estimate.m_taxi(coordinates)
-        print('city成功', city_price)
-        # len(mail) != 0:
+        # 如果使用者沒輸入email的話，代表不使用line taxi車資估算
         if mail is None:
 
             line_taxi_price = 0
@@ -93,6 +88,13 @@ class MainPage():
         else:
             line_taxi_price = estimate.line_taxi(start_loc, stop_loc, mail, pwd)
             print('line成功', line_taxi_price)
+
+        # 帶入其他function中估算車資
+        tw_taxi_price = estimate.tw_taxi(uber_address_name)
+        print('tw成功', tw_taxi_price)
+
+        city_price = estimate.m_taxi(coordinates)
+        print('city成功', city_price)
 
         firm_list = ['Uber', 'LINE', 'TW', 'Metro']
         price_list = [uber_taxi_price, line_taxi_price, tw_taxi_price, city_price]
@@ -104,22 +106,40 @@ class MainPage():
         # 把結果由小到大排序
         result = sorted(list(result), key=lambda x: (x[1]))
 
+        # 建立一塊區域呈現結果
+        self.result_frame = Frame(self.root, bg='red')
+        self.result_frame.pack()
+
         # 把沒結果(結果為0)的估計車資改成無估計車資
         for i in range(len(result)):
 
             firm = result[i][0]
             fare = result[i][1]
+            check_fare = fare
 
             if fare == 0:
-                result[i][1] = '無估計車資'
+                check_fare = '無估計車資'
+            else:
+                check_fare = fare
 
             # 由小到大呈現在畫面上
-            self.firm_name = Label(text=firm, font = ("Telugu MN", 20), bg="bisque")
-            self.firm_name.place(x= 100, y= 400  + i*40)
+            self.firm_name = Label(self.result_frame, text=firm, font = ("Telugu MN", 20), bg="bisque")
+            #self.firm_name.place(x= 100, y= 400  + i*40)
+            self.firm_name.grid(row=i, column=0)
 
-            self.estimate_price = Label(text=result[i][1], font = ("Telugu MN", 20), bg="bisque")
-            self.estimate_price.place(x= 180, y= 400  + i*40)
-            
+            self.estimate_price = Label(self.result_frame, text=check_fare, font = ("Telugu MN", 20), bg="bisque")
+            self.firm_name.grid(row=i, column=1)
+            #self.estimate_price.place(x= 180, y= 400  + i*40)
+
+
+    def Reset(self):
+
+        self.start_entry.delete(0, END)
+        self.arrive_entry.delete(0, END)
+        self.start_location_suggestions_dropdown_list.destroy()
+        self.arrive_location_suggestions_dropdown_list.destroy()
+        self.result_frame.destroy()
+        #self.estimate_price.destroy()
 
     def CreatePage(self):
 
@@ -156,45 +176,14 @@ class MainPage():
         self.thrifty_btn.place(x=330, y=240)
         self.thrifty_btn.config(highlightbackground='floral white')
 
+        # 'Reset' button
+        self.thrifty_btn = Button(width=10, height=1, text='reset!', relief=GROOVE, font = ("Telugu MN", 20), bg='snow', command=self.Reset)
+        self.thrifty_btn.place(x=500, y=240)
+
 
     #self.testvar = Label(text = 'Email:'+ self.mail).grid(row=1, stick=W, pady=10)
 
 
 
     
-   # def createPage(self):
-   #  self.inputPage = InputFrame(self.root) # 建立不同Frame
-   #  self.queryPage = QueryFrame(self.root)
-   #  self.countPage = CountFrame(self.root)
-   #  self.aboutPage = AboutFrame(self.root)
-   #  self.inputPage.pack() #預設顯示資料錄入介面
-   #  menubar = Menu(self.root)
-   #  menubar.add_command(label='資料錄入', command = self.inputData)
-   #  menubar.add_command(label='查詢', command = self.queryData)
-   #  menubar.add_command(label='統計', command = self.countData)
-   #  menubar.add_command(label='關於', command = self.aboutDisp)
-   #  self.root['menu'] = menubar # 設定選單欄
-    
-   # def inputData(self):
-   #  self.inputPage.pack()
-   #  self.queryPage.pack_forget()
-   #  self.countPage.pack_forget()
-   #  self.aboutPage.pack_forget()
-    
-   # def queryData(self):
-   #  self.inputPage.pack_forget()
-   #  self.queryPage.pack()
-   #  self.countPage.pack_forget()
-   #  self.aboutPage.pack_forget()
-    
-   # def countData(self):
-   #  self.inputPage.pack_forget()
-   #  self.queryPage.pack_forget()
-   #  self.countPage.pack()
-   #  self.aboutPage.pack_forget()
-    
-   # def aboutDisp(self):
-   #  self.inputPage.pack_forget()
-   #  self.queryPage.pack_forget()
-   #  self.countPage.pack_forget()
-   #  self.aboutPage.pack()
+  
