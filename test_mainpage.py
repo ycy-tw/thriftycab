@@ -1,5 +1,6 @@
 from tkinter import *
 from crawler import Crawler
+from PIL import ImageTk,Image
 #from view import * #選單欄對應的各個子頁面
 
 class MainPage():
@@ -8,7 +9,12 @@ class MainPage():
 
         self.root = master #定義內部變數root
         self.root.geometry('800x600') #設定視窗大小
-        self.root.configure(bg='floral white')
+        #self.root.configure(bg='floral white')
+        self.root.image1 = Image.open("/Users/jiapei/Desktop/thriftycab/bg2.jpg")
+        self.root.test = ImageTk.PhotoImage(self.root.image1)
+        self.root.label1 = Label(image=self.root.test)
+        self.root.label1.image = self.root.test
+        self.root.label1.pack()
         self.root.resizable(height='False', width='False')
 
         self.mail = mail
@@ -33,7 +39,8 @@ class MainPage():
         self.start_default_variable = StringVar(self.root)
         self.start_default_variable.set(start_location_suggestions[0]) # default value
         self.start_location_suggestions_dropdown_list = OptionMenu(self.root, self.start_default_variable, *start_location_suggestions)
-        self.start_location_suggestions_dropdown_list.place(x=423, y= 129)
+        self.start_location_suggestions_dropdown_list.config(width=34)
+        self.start_location_suggestions_dropdown_list.place(x=97, y= 265)
 
 
     def arrive_click_searching(self):
@@ -54,7 +61,8 @@ class MainPage():
         self.arrive_default_variable = StringVar(self.root)
         self.arrive_default_variable.set(arrive_location_suggestions[0]) # default value
         self.arrive_location_suggestions_dropdown_list = OptionMenu(self.root, self.arrive_default_variable, *arrive_location_suggestions)
-        self.arrive_location_suggestions_dropdown_list.place(x=423, y= 189)
+        self.arrive_location_suggestions_dropdown_list.config(width=34)
+        self.arrive_location_suggestions_dropdown_list.place(x=97, y= 365)
 
 
     def thrifty_searching(self, start_loc=None, stop_loc=None):
@@ -96,7 +104,7 @@ class MainPage():
         city_price = estimate.m_taxi(coordinates)
         print('city成功', city_price)
 
-        firm_list = ['Uber', 'LINE', 'TW', 'Metro']
+        firm_list = ['Uber', 'LINE TAXI', '台灣大車隊', '大都會計程車']
         price_list = [uber_taxi_price, line_taxi_price, tw_taxi_price, city_price]
 
         result = []
@@ -107,8 +115,8 @@ class MainPage():
         result = sorted(list(result), key=lambda x: (x[1]))
 
         # 建立一塊區域呈現結果
-        self.result_frame = Frame(self.root, bg='red')
-        self.result_frame.pack()
+        self.result_frame = Frame(self.root, bg='white')
+        self.result_frame.place(x=490, y=258)
 
         # 把沒結果(結果為0)的估計車資改成無估計車資
         for i in range(len(result)):
@@ -120,16 +128,16 @@ class MainPage():
             if fare == 0:
                 check_fare = '無估計車資'
             else:
-                check_fare = fare
+                check_fare = str('NT$ ')+str(check_fare)
 
             # 由小到大呈現在畫面上
-            self.firm_name = Label(self.result_frame, text=firm, font = ("Telugu MN", 20), bg="bisque")
-            #self.firm_name.place(x= 100, y= 400  + i*40)
+            self.firm_name = Label(self.result_frame, text=firm, font = ("Telugu MN", 18), bg="white")
+            # self.firm_name.place(x= 100, y= 400  + i*40)
             self.firm_name.grid(row=i, column=0)
 
-            self.estimate_price = Label(self.result_frame, text=check_fare, font = ("Telugu MN", 20), bg="bisque")
-            self.firm_name.grid(row=i, column=1)
-            #self.estimate_price.place(x= 180, y= 400  + i*40)
+            self.estimate_price = Label(self.result_frame, text=check_fare, font = ("Telugu MN", 18), bg="white")
+            self.estimate_price.grid(row=i, column=1)
+            # self.estimate_price.place(x= 180, y= 400  + i*40)
 
 
     def Reset(self):
@@ -144,41 +152,58 @@ class MainPage():
     def CreatePage(self):
 
         # 標題
-        self.lbl_title = Label(text = 'Thrifty Cab', font=("Telugu MN", 60, 'bold italic'), bg='floral white')
-        self.lbl_title.place(x=220, y=30)
+        self.lbl_title = Label(text = 'Thrifty Cab', font=("Telugu MN", 60, 'bold italic'), bg='white')
+        self.lbl_title.place(x=220, y=110)
 
         # 起始點
-        self.frm_start = Frame(width=760, height=40, background="bisque")
-        self.frm_start.place(x=20, y=120)
-        self.lbl_start = Label(text = 'Pickup Location', font = ("Telugu MN", 20), bg="bisque")
-        self.lbl_start.place(x=28, y=122)
+        self.frm_start = Frame(width=403, height=40, background="lemon chiffon")
+        self.frm_start.place(x=50, y=210)
+        self.frm_startbox = Frame(width=30, height=30, background="lemon chiffon")
+        self.frm_startbox.place(x=55, y=263)
+        self.frm_startlist = Frame(width=363, height=40, background="gray98", relief='solid', borderwidth=1)
+        self.frm_startlist.place(x=90, y=260)
+        self.lbl_start = Label(text = 'Pickup Location', font = ("Telugu MN", 20), bg="lemon chiffon")
+        self.lbl_start.place(x=58, y=212)
         self.start_entry = Entry(bg="gray88", relief=GROOVE, width=18,)#,textvariable=v
-        self.start_entry.place(x=185, y=126)
-        self.start_entry.config(highlightbackground="bisque")
+        self.start_entry.place(x=215, y=216)
+        self.start_entry.config(highlightbackground="lemon chiffon")
         self.search_button = Button(text='search', width=3, relief=GROOVE, command=self.start_click_searching)
-        self.search_button.place(x=360, y=125)
-        self.search_button.config(highlightbackground="bisque")
+        self.search_button.place(x=390, y=215)
+        self.search_button.config(highlightbackground="lemon chiffon")
 
         # 終點
-        self.frm_arrive = Frame(width=760, height=40, background="bisque")
-        self.frm_arrive.place(x=20, y=180)
+        self.frm_arrive = Frame(width=403, height=40, background="bisque")
+        self.frm_arrive.place(x=50, y=310)
+        self.frm_arrivelist = Frame(width=363, height=40, background="gray98", relief='solid', borderwidth=1)
+        self.frm_arrivelist.place(x=90, y=360)
+        self.frm_arrivebox = Frame(width=30, height=30, background="bisque")
+        self.frm_arrivebox.place(x=55, y=363)
         self.lbl_arrive = Label(text = 'Where to?', font = ("Telugu MN", 20), bg="bisque")
-        self.lbl_arrive.place(x=50, y=182)
+        self.lbl_arrive.place(x=58, y=312)
         self.arrive_entry = Entry(bg="gray88", relief=GROOVE, width=18,)#,textvariable=v
-        self.arrive_entry.place(x=185, y=186)
+        self.arrive_entry.place(x=215, y=316)
         self.arrive_entry.config(highlightbackground="bisque")
         self.search_button = Button(text='search', width=3, relief=GROOVE, command=self.arrive_click_searching)
-        self.search_button.place(x=360, y=185)
+        self.search_button.place(x=390, y=315)
         self.search_button.config(highlightbackground="bisque")
 
         # 'Thrifty' button
         self.thrifty_btn = Button(width=10, height=1, text='Thrifty!', relief=GROOVE, font = ("Telugu MN", 20), bg='snow', command=self.thrifty_searching)
-        self.thrifty_btn.place(x=330, y=240)
-        self.thrifty_btn.config(highlightbackground='floral white')
+        self.thrifty_btn.place(x=170, y=420)
+        self.thrifty_btn.config(highlightbackground='white')
+
+        # 'Result' board
+        self.frm_result = Frame(width=263, height=187, background="white",relief='solid', borderwidth=2)
+        self.frm_result.place(x=473, y=212)
+        self.frm_result1 = Frame(width=263, height=35, background="white",relief='solid', borderwidth=2)
+        self.frm_result1.place(x=473, y=212)
+        self.lbl_result = Label(text = 'Result', font = ("Telugu MN", 15), bg="white")
+        self.lbl_result.place(x=578, y=215)
 
         # 'Reset' button
-        self.thrifty_btn = Button(width=10, height=1, text='reset!', relief=GROOVE, font = ("Telugu MN", 20), bg='snow', command=self.Reset)
-        self.thrifty_btn.place(x=500, y=240)
+        self.reset_btn = Button(width=10, height=1, text='Reset', relief=GROOVE, font = ("Telugu MN", 20), bg='snow', command=self.Reset)
+        self.reset_btn.place(x=530, y=420)
+        self.reset_btn.config(highlightbackground='white')
 
 
     #self.testvar = Label(text = 'Email:'+ self.mail).grid(row=1, stick=W, pady=10)
