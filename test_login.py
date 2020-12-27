@@ -41,7 +41,7 @@ class LoginPage:
     def __init__(self, master=None):
 
         self.root = master #定義內部變數root
-        self.root.geometry('%dx%d' % (300, 180)) #設定視窗大小
+        self.root.geometry('%dx%d' % (400, 300)) #設定視窗大小
         self.root.configure(bg='floral white')
         self.root.resizable(height='False', width='False')
 
@@ -55,7 +55,7 @@ class LoginPage:
         self.page.pack()
 
         Label(self.page, text = 'LINE SERVICE ACTIVATE').grid(row=0, stick=W)
-        Label(self.page, text = 'Email: ').grid(row=1, stick=W, pady=10)
+        Label(self.page, text = 'Email: ').grid(row=1, stick=W, pady=15)
         Entry(self.page, textvariable=self.username).grid(row=1, column=1, stick=E)
         Label(self.page, text = 'Password: ').grid(row=2, stick=W, pady=10)
         Entry(self.page, textvariable=self.password, show='*').grid(row=2, column=1, stick=E)
