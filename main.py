@@ -66,25 +66,25 @@ def arrive_click_searching():
     arrive_location_suggestions_dropdown_list.place(x=423, y= 369)
 
 
-def thrifty_searching(start_loc=start_default_variable.get(), stop_loc=arrive_default_variable.get()):
+# def thrifty_searching(start_loc=start_default_variable.get(), stop_loc=arrive_default_variable.get()):
 
-    estimate = Crawler()
+#     estimate = Crawler()
 
-    # Uber的結果
-    uber_result = estimate.uber_taxi(start_loc, stop_loc)
+#     # Uber的結果
+#     uber_result = estimate.uber_taxi(start_loc, stop_loc)
 
-    # 把uber回傳的資源賦值
-    uber_taxi_price = uber_result[0]
-    coordinates = uber_result[1]
-    start_choice_name = uber_result[2]
-    stop_choice_name = uber_result[3]
+#     # 把uber回傳的資源賦值
+#     uber_taxi_price = uber_result[0]
+#     coordinates = uber_result[1]
+#     start_choice_name = uber_result[2]
+#     stop_choice_name = uber_result[3]
 
-    # 帶入其他function中估算車資
-    line_taxi_price = estimate.lin_taxi(start_loc, stop_loc, name, pwd)
-    tw_taxi_price = estimate.uber_taxi(coordinates, start_choice_name, stop_choice_name)
-    city_price = estimate.city(coordinates)
+#     # 帶入其他function中估算車資
+#     line_taxi_price = estimate.lin_taxi(start_loc, stop_loc, name, pwd)
+#     tw_taxi_price = estimate.uber_taxi(coordinates, start_choice_name, stop_choice_name)
+#     city_price = estimate.city(coordinates)
 
-    return uber_taxi_price, line_taxi_price, tw_taxi_price, city_price
+#     return uber_taxi_price, line_taxi_price, tw_taxi_price, city_price
 
 
 # 視窗頁面
@@ -126,8 +126,8 @@ search_button.config(highlightbackground="bisque")
 
 
 # 'Thrifty' button
-thrifty_btn = Button(width=10, height=1, text='Thrifty!', relief=GROOVE, font = ("Telugu MN", 20), bg='snow', command=thrifty_searching)
-thrifty_btn.place(x=330, y=420)
-thrifty_btn.config(highlightbackground='floral white')
+# thrifty_btn = Button(width=10, height=1, text='Thrifty!', relief=GROOVE, font = ("Telugu MN", 20), bg='snow', command=thrifty_searching)
+# thrifty_btn.place(x=330, y=420)
+# thrifty_btn.config(highlightbackground='floral white')
 
-window.mainloop()
+# window.mainloop()
