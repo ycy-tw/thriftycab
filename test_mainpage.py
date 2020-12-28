@@ -10,7 +10,7 @@ class MainPage():
         self.root = master #定義內部變數root
         self.root.geometry('800x600') #設定視窗大小
         #self.root.configure(bg='floral white')
-        self.root.image1 = Image.open("bg2.jpg")
+        self.root.image1 = Image.open("/Users/jiapei/Desktop/thriftycab/bg2.jpg")
         self.root.test = ImageTk.PhotoImage(self.root.image1)
         self.root.label1 = Label(image=self.root.test)
         self.root.label1.image = self.root.test
@@ -73,10 +73,6 @@ class MainPage():
         mail = self.mail
         pwd = self.pwd
 
-        # 建立一塊區域呈現結果
-        self.result_frame = Frame(self.root, bg='white')
-        self.result_frame.place(x=490, y=258)
-
         estimate = Crawler()
 
         # Uber的結果
@@ -91,8 +87,6 @@ class MainPage():
 
         print('uebr成功', uber_taxi_price)
 
-        self.process = Label(self.result_frame, text='工作進度完成25%...', font = ("Telugu MN", 18), bg="white").grid(row=1, column=1)
-
         # 如果使用者沒輸入email的話，代表不使用line taxi車資估算
         if mail is None:
 
@@ -103,18 +97,12 @@ class MainPage():
             line_taxi_price = estimate.line_taxi(start_loc, stop_loc, mail, pwd)
             print('line成功', line_taxi_price)
 
-        self.process = Label(self.result_frame, text='工作進度完成50%...', font = ("Telugu MN", 18), bg="white").grid(row=1, column=1)
-
         # 帶入其他function中估算車資
         tw_taxi_price = estimate.tw_taxi(uber_address_name)
         print('tw成功', tw_taxi_price)
 
-        self.process = Label(self.result_frame, text='工作進度完成75%...', font = ("Telugu MN", 18), bg="white").grid(row=1, column=1)
-
         city_price = estimate.m_taxi(coordinates)
         print('city成功', city_price)
-
-        self.process = Label(self.result_frame, text='工作進度完成95%...', font = ("Telugu MN", 18), bg="white").grid(row=1, column=1)
 
         firm_list = ['Uber', 'LINE TAXI', '台灣大車隊', '大都會計程車']
         price_list = [uber_taxi_price, line_taxi_price, tw_taxi_price, city_price]
@@ -126,7 +114,10 @@ class MainPage():
         # 把結果由小到大排序
         result = sorted(list(result), key=lambda x: (x[1]))
 
-        self.process.destroy()
+        # 建立一塊區域呈現結果
+        self.result_frame = Frame(self.root, bg='white')
+        self.result_frame.place(x=490, y=258)
+
         # 把沒結果(結果為0)的估計車資改成無估計車資
         for i in range(len(result)):
 
@@ -156,6 +147,7 @@ class MainPage():
         self.start_location_suggestions_dropdown_list.destroy()
         self.arrive_location_suggestions_dropdown_list.destroy()
         self.result_frame.destroy()
+        #self.estimate_price.destroy()
 
     def CreatePage(self):
 

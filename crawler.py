@@ -31,33 +31,14 @@ class Crawler:
         chrome = webdriver.Chrome('./chromedriver', chrome_options=options)
         chrome.get("https://www.uber.com/tw/zh-tw/price-estimate/")
 
-        ############
-        ## 原版   ##
-        ############
-
-        # time.sleep(2)
-        # # 找到輸入地點的entry
-        # entry = chrome.find_element_by_css_selector("input[placeholder='輸入上車地點']")
-
-        # # 緩慢輸入
-        # for w in loc:
-        #     entry.send_keys(w)
-        #     time.sleep(1)
-
-        #############
-        ##
-        #############
-
-        get_list_yet =False
-        while get_list_yet != True:
-            try:
-                entry = chrome.find_element_by_css_selector("input[placeholder='輸入上車地點']")
-                get_list_yet = True
-            except:
-                pass
-
-        entry.send_keys(loc)
         time.sleep(2)
+        # 找到輸入地點的entry
+        entry = chrome.find_element_by_css_selector("input[placeholder='輸入上車地點']")
+
+        # 緩慢輸入
+        for w in loc:
+            entry.send_keys(w)
+            time.sleep(1)
 
         # 取得輸入起始點後的建議清單
         location_list = chrome.find_elements_by_xpath('//ul[@role="listbox"]')
@@ -78,28 +59,16 @@ class Crawler:
         # 開啟Chrome 進入頁面
         chrome = webdriver.Chrome('./chromedriver', chrome_options=options)
         chrome.get("https://www.uber.com/tw/zh-tw/price-estimate/")
-        # time.sleep(3)
+        time.sleep(3)
 
-        # start = chrome.find_element_by_css_selector("input[placeholder='輸入上車地點']")
-        # stop = chrome.find_element_by_css_selector("input[placeholder='輸入目的地']")
+        start = chrome.find_element_by_css_selector("input[placeholder='輸入上車地點']")
+        stop = chrome.find_element_by_css_selector("input[placeholder='輸入目的地']")
 
-        # # 緩慢輸入
-        # for w in start_loc:
-        #     start.send_keys(w)
-        #     time.sleep(1)
+        # 緩慢輸入
+        for w in start_loc:
+            start.send_keys(w)
+            time.sleep(1)
 
-        # time.sleep(2)
-        get_start_stop_yet = False
-
-        while get_start_stop_yet != True:
-            try:
-                start = chrome.find_element_by_css_selector("input[placeholder='輸入上車地點']")
-                stop = chrome.find_element_by_css_selector("input[placeholder='輸入目的地']")
-                get_start_stop_yet = True
-            except:
-                pass
-
-        start.send_keys(start_loc)
         time.sleep(2)
 
         # 取得輸入起始點後的建議清單
@@ -121,12 +90,10 @@ class Crawler:
         start_id = next(c for c in start_ck if c["name"] == "_gali")['value']
 
         # 緩慢輸入
-        # for w in stop_loc:
-        #     stop.send_keys(w)
-        #     time.sleep(1)
+        for w in stop_loc:
+            stop.send_keys(w)
+            time.sleep(1)
 
-        # time.sleep(2)
-        start.send_keys(stop_loc)
         time.sleep(2)
 
         # 取得輸入終點後的建議清單
@@ -137,7 +104,7 @@ class Crawler:
         current_stop_choice = chrome.find_elements_by_xpath("//*[contains(text(), '台灣')]")[0]
         ActionChains(chrome).move_to_element(current_stop_choice).click().perform()
 
-        time.sleep(3)
+        time.sleep(5)
 
         # 取得點選過後的地址，為了要有正確地點給台灣大車隊用
         #correct_stop_address = stop.get_attribute('value')
@@ -307,30 +274,28 @@ class Crawler:
         start_loc = start_choice_name
         stop_loc = stop_choice_name
 
-        # for w in start_loc:
-        #     start.send_keys(w)
-        #     time.sleep(1)
-        start.send_keys(start_loc)
+        for w in start_loc:
+            start.send_keys(w)
+            time.sleep(1)
 
         # 點選最接近地點
-        time.sleep(2)
+        time.sleep(3)
         choice1 = chrome.find_elements_by_xpath('//div[@class="address-title-des subtitle_01"][@data-index="0"]')[1]
         ActionChains(chrome).move_to_element(choice1).click().perform()
 
-        time.sleep(2)
+        time.sleep(3)
 
         # 緩慢輸入
-        # for w in stop_loc:
-        #     stop.send_keys(w)
-        #     time.sleep(1)
-        start.send_keys(stop_loc)
+        for w in stop_loc:
+            stop.send_keys(w)
+            time.sleep(1)
     
         # 點選最接近地點
-        time.sleep(2)
+        time.sleep(3)
         choice1 = chrome.find_elements_by_xpath('//div[@class="address-title-des subtitle_01"][@data-index="0"]')[1]
         ActionChains(chrome).move_to_element(choice1).click().perform()
 
-        time.sleep(2)
+        time.sleep(3)
         LINE_TAXI_PLUS = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[0].text
         LINE_TAXI = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[1].text
 
