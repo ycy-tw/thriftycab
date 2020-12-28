@@ -228,13 +228,12 @@ class Crawler:
         time.sleep(3)
         code_for_phone = chrome.find_element_by_class_name("mdMN06Number").text
         #print('請到手機上輸入', code_for_phone)
-
+        messagebox.showinfo("驗證碼", "請到您手機上輸入:"+str(code_for_phone))
         enter_yet = False
 
         while enter_yet != True:
 
-            time.sleep(5)
-            messagebox.showinfo("驗證碼", "請到您手機上輸入:"+str(code_for_phone)) 
+            time.sleep(5) 
 
             try:
             # 登入
