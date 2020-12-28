@@ -38,7 +38,7 @@ class Crawler:
         # 緩慢輸入
         for w in loc:
             entry.send_keys(w)
-            time.sleep(1)
+            time.sleep(0.5)
 
         # 取得輸入起始點後的建議清單
         location_list = chrome.find_elements_by_xpath('//ul[@role="listbox"]')
@@ -67,7 +67,7 @@ class Crawler:
         # 緩慢輸入
         for w in start_loc:
             start.send_keys(w)
-            time.sleep(1)
+            time.sleep(0.5)
 
         time.sleep(2)
 
@@ -92,7 +92,7 @@ class Crawler:
         # 緩慢輸入
         for w in stop_loc:
             stop.send_keys(w)
-            time.sleep(1)
+            time.sleep(0.5)
 
         time.sleep(2)
 
@@ -104,7 +104,7 @@ class Crawler:
         current_stop_choice = chrome.find_elements_by_xpath("//*[contains(text(), '台灣')]")[0]
         ActionChains(chrome).move_to_element(current_stop_choice).click().perform()
 
-        time.sleep(5)
+        time.sleep(3)
 
         # 取得點選過後的地址，為了要有正確地點給台灣大車隊用
         #correct_stop_address = stop.get_attribute('value')
@@ -248,7 +248,7 @@ class Crawler:
             except:
                 pass
 
-        time.sleep(5)
+        time.sleep(2)
 
 
         # 點掉廣告
@@ -276,26 +276,26 @@ class Crawler:
 
         for w in start_loc:
             start.send_keys(w)
-            time.sleep(1)
+            time.sleep(0.5)
 
         # 點選最接近地點
-        time.sleep(3)
+        time.sleep(2)
         choice1 = chrome.find_elements_by_xpath('//div[@class="address-title-des subtitle_01"][@data-index="0"]')[1]
         ActionChains(chrome).move_to_element(choice1).click().perform()
 
-        time.sleep(3)
+        time.sleep(2)
 
         # 緩慢輸入
         for w in stop_loc:
             stop.send_keys(w)
-            time.sleep(1)
+            time.sleep(0.5)
     
         # 點選最接近地點
-        time.sleep(3)
+        time.sleep(1.5)
         choice1 = chrome.find_elements_by_xpath('//div[@class="address-title-des subtitle_01"][@data-index="0"]')[1]
         ActionChains(chrome).move_to_element(choice1).click().perform()
 
-        time.sleep(3)
+        time.sleep(1.5)
         LINE_TAXI_PLUS = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[0].text
         LINE_TAXI = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[1].text
 
