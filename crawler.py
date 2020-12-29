@@ -29,6 +29,7 @@ class Crawler:
         # 開啟Chrome 進入登入頁面
         chrome = webdriver.Chrome('./chromedriver', chrome_options=options)
         chrome.get("https://www.uber.com/tw/zh-tw/price-estimate/")
+        time.sleep(2)
 
         # 找到輸入地點的entry
         entry = chrome.find_element_by_css_selector("input[placeholder='輸入上車地點']")
