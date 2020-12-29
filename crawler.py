@@ -20,7 +20,6 @@ class Crawler:
     # 當使用者輸入地點後，透過Uber顯示的可能地點提供使用者選擇
     def location_suggestions(self, loc):
 
-        # 避免彈出視窗
         options = Options()
         options.add_argument("--disable-notifications")
         options.add_argument("--headless")
@@ -31,14 +30,12 @@ class Crawler:
         chrome = webdriver.Chrome('./chromedriver', chrome_options=options)
         chrome.get("https://www.uber.com/tw/zh-tw/price-estimate/")
 
-        time.sleep(2)
         # 找到輸入地點的entry
         entry = chrome.find_element_by_css_selector("input[placeholder='輸入上車地點']")
 
-        # 緩慢輸入
-        for w in loc:
-            entry.send_keys(w)
-            time.sleep(0.5)
+        # Method2. 大約8秒
+        entry.send_keys(loc)
+        time.sleep(2)
 
         # 取得輸入起始點後的建議清單
         location_list = chrome.find_elements_by_xpath('//ul[@role="listbox"]')
@@ -64,11 +61,7 @@ class Crawler:
         start = chrome.find_element_by_css_selector("input[placeholder='輸入上車地點']")
         stop = chrome.find_element_by_css_selector("input[placeholder='輸入目的地']")
 
-        # 緩慢輸入
-        for w in start_loc:
-            start.send_keys(w)
-            time.sleep(0.5)
-
+        start.send_keys(start_loc)
         time.sleep(2)
 
         # 取得輸入起始點後的建議清單
@@ -79,21 +72,12 @@ class Crawler:
         current_start_choice = chrome.find_elements_by_xpath("//*[contains(text(), '台灣')]")[start_choice]
         ActionChains(chrome).move_to_element(current_start_choice).click().perform()
 
-        #time.sleep(2)
-
-        # 取得點選過後的地址，為了要有正確地點給台灣大車隊用
-        #correct_start_address = start.get_attribute('value')
-
         # 取得起始點的 cookie 和 id
         start_ck = chrome.get_cookies()
         start_cookie = ';'.join(['{}={}'.format(item.get('name'), item.get('value')) for item in start_ck]).encode('utf-8')
         start_id = next(c for c in start_ck if c["name"] == "_gali")['value']
 
-        # 緩慢輸入
-        for w in stop_loc:
-            stop.send_keys(w)
-            time.sleep(0.5)
-
+        stop.send_keys(stop_loc)
         time.sleep(2)
 
         # 取得輸入終點後的建議清單
@@ -104,18 +88,21 @@ class Crawler:
         current_stop_choice = chrome.find_elements_by_xpath("//*[contains(text(), '台灣')]")[0]
         ActionChains(chrome).move_to_element(current_stop_choice).click().perform()
 
-        time.sleep(3)
+        get_offer_yet = False
+        while get_offer_yet != True:
+            try:
+                # 取得估價結果
+                offers = chrome.find_elements_by_xpath('//div[@tabindex="0"]')
+                offers = [o.text for o in offers if o.text.find('$') != -1]
 
-        # 取得點選過後的地址，為了要有正確地點給台灣大車隊用
-        #correct_stop_address = stop.get_attribute('value')
-
-        # 取得估價結果
-        offers = chrome.find_elements_by_xpath('//div[@tabindex="0"]')
-        offers = [o.text for o in offers if o.text.find('$') != -1]
-
-        # 乘車方案和名稱
-        uber_offer_name = offers[0].split('\n')[0]
-        uber_offer_price = float(offers[0].split('\n')[1].replace('$','').replace(',',''))
+                # 乘車方案和名稱
+                uber_offer_name = offers[0].split('\n')[0]
+                uber_offer_price = float(offers[0].split('\n')[1].replace('$','').replace(',',''))
+                get_offer_yet = True
+                prin('Success, got offer')
+            except:
+                print('fail to get offer')
+                pass
 
         # 取得終點的 cookie 和 id
         stop_ck = chrome.get_cookies()
@@ -126,7 +113,6 @@ class Crawler:
         uber_ck_data = {'start':[start_cookie, start_id], 'stop':[stop_cookie, stop_id]}
         uber_coordinates = {}
         uber_address_name = {}
-
 
         # 座標軸, 確切地址, 地點名稱的爬取過程
         for k, v in uber_ck_data.items():
@@ -216,24 +202,24 @@ class Crawler:
         chrome.get("https://app.taxigo.com.tw/")
 
         time.sleep(3)
-    
+
         Email = chrome.find_element_by_name("tid")
         Password = chrome.find_element_by_name("tpasswd")
 
         time.sleep(3)
+
         Email.send_keys(line_id)
         Password.send_keys(line_password)
         Password.submit()
 
         time.sleep(3)
         code_for_phone = chrome.find_element_by_class_name("mdMN06Number").text
-        #print('請到手機上輸入', code_for_phone)
         messagebox.showinfo("驗證碼", "請到您手機上輸入:"+str(code_for_phone))
         enter_yet = False
 
         while enter_yet != True:
 
-            time.sleep(5) 
+            time.sleep(3) 
 
             try:
             # 登入
@@ -242,65 +228,72 @@ class Crawler:
 
                 Email.send_keys(line_id)
                 Password.send_keys(line_password)
+                    
                 Password.submit()
                 enter_yet = True
 
             except:
                 pass
 
-        time.sleep(2)
+        #time.sleep(5)
+        Estimate_page = False
 
+        while Estimate_page != True:
+            try:
+                # 嘗試著點廣告1
+                try:
+                    ad_button = chrome.find_elements_by_xpath('//button[@class="popWarning-btn h6"]')[0]
+                    ActionChains(chrome).move_to_element(ad_button).click().perform()
+                except:
+                    pass
 
-        # 點掉廣告
-        try:
-            ad_button = chrome.find_elements_by_xpath('//button[@class="popWarning-btn h6"]')[0]
-            ActionChains(chrome).move_to_element(ad_button).click().perform()
-        except:
-            pass
+                # 嘗試著點廣告2
+                try:
+                    ad_button = chrome.find_elements_by_xpath('//div[@class="notification-close-area"]')[0]
+                    ActionChains(chrome).move_to_element(ad_button).click().perform()
+                except:
+                    pass
 
-        try:
-            ad_button = chrome.find_elements_by_xpath('//div[@class="notification-close-area"]')[0]
-            ActionChains(chrome).move_to_element(ad_button).click().perform()
-        except:
-            pass
-        
-        enter_adress_button = chrome.find_elements_by_xpath('//span[@class="null"]')[0]
-        ActionChains(chrome).move_to_element(enter_adress_button).click().perform()
+                # 點選下面的地址按鈕會直接跳轉到車資估算的畫面
+                enter_adress_button = chrome.find_elements_by_xpath('//span[@class="null"]')[0]
+                ActionChains(chrome).move_to_element(enter_adress_button).click().perform()
 
-        time.sleep(3)
-        start = chrome.find_element_by_css_selector("input[placeholder='上車地點']")
-        stop = chrome.find_element_by_css_selector("input[placeholder='下車地點']")
+                time.sleep(3)
+
+                start = chrome.find_element_by_css_selector("input[placeholder='上車地點']")
+                stop = chrome.find_element_by_css_selector("input[placeholder='下車地點']")
+                Estimate_page = True
+
+                print('Success')
+            except:
+                print('Fail to enter estimate_page')
+                pass
 
         start_loc = start_choice_name
         stop_loc = stop_choice_name
 
-        for w in start_loc:
-            start.send_keys(w)
-            time.sleep(0.5)
+        # 輸入上車地並點選第一個選項
+        start.send_keys(start_loc)
+        time.sleep(0.5)
+        choice1 = chrome.find_elements_by_xpath('//div[@class="address-title-des subtitle_01"][@data-index="0"]')[1]
+        ActionChains(chrome).move_to_element(choice1).click().perform()
 
-        # 點選最接近地點
-        time.sleep(2)
+        time.sleep(0.5)
+
+        # 輸入下車地並點選第一個選項
+        stop.send_keys(stop_loc)
+        time.sleep(0.5)
         choice1 = chrome.find_elements_by_xpath('//div[@class="address-title-des subtitle_01"][@data-index="0"]')[1]
         ActionChains(chrome).move_to_element(choice1).click().perform()
 
         time.sleep(2)
 
-        # 緩慢輸入
-        for w in stop_loc:
-            stop.send_keys(w)
-            time.sleep(0.5)
-    
-        # 點選最接近地點
-        time.sleep(1.5)
-        choice1 = chrome.find_elements_by_xpath('//div[@class="address-title-des subtitle_01"][@data-index="0"]')[1]
-        ActionChains(chrome).move_to_element(choice1).click().perform()
-
-        time.sleep(1.5)
         LINE_TAXI_PLUS = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[0].text
         LINE_TAXI = chrome.find_elements_by_xpath('//div[@class="select-car-estimate"]')[1].text
 
         index = LINE_TAXI.find('~')
         lowest = float(LINE_TAXI[:index].replace('$',''))
+
         return lowest
 
 
