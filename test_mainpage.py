@@ -10,7 +10,7 @@ class MainPage():
         self.root = master #定義內部變數root
         self.root.geometry('800x600') #設定視窗大小
         #self.root.configure(bg='floral white')
-        self.root.image1 = Image.open("bg2.jpg")
+        self.root.image1 = Image.open("/Users/jiapei/Desktop/thriftycab/bg2.jpg")
         self.root.test = ImageTk.PhotoImage(self.root.image1)
         self.root.label1 = Label(image=self.root.test)
         self.root.label1.image = self.root.test
@@ -132,10 +132,12 @@ class MainPage():
 
             # 由小到大呈現在畫面上
             self.firm_name = Label(self.result_frame, text=firm, font = ("Telugu MN", 18), bg="white")
+            # self.firm_name.place(x= 100, y= 400  + i*40)
             self.firm_name.grid(row=i, column=0)
 
             self.estimate_price = Label(self.result_frame, text=check_fare, font = ("Telugu MN", 18), bg="white")
             self.estimate_price.grid(row=i, column=1)
+            # self.estimate_price.place(x= 180, y= 400  + i*40)
 
 
     def Reset(self):
