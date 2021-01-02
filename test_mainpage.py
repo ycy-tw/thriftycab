@@ -88,24 +88,34 @@ class MainPage():
         uber_address_name = uber_result[4]
 
         print('uebr成功', uber_taxi_price)
+        
+        #self.progress.config(highlightbackground='white')
         self.progress = ttk.Progressbar(self.root, orient=HORIZONTAL, length=380, mode='determinate')
-        self.progress.place(x=200, y=190, pady=20)
+        self.progress['value']=25
+        self.progress.place(x=200, y=190)
+
+
+        
         # 如果使用者沒輸入email的話，代表不使用line taxi車資估算
         if mail is None:
 
             line_taxi_price = 0
             print('使用者不用line', line_taxi_price)
+            # self.progress['value']=50
 
         else:
             line_taxi_price = estimate.line_taxi(start_loc, stop_loc, mail, pwd)
             print('line成功', line_taxi_price)
+            self.progress['value']=50
 
         # 帶入其他function中估算車資
         tw_taxi_price = estimate.tw_taxi(uber_address_name)
         print('tw成功', tw_taxi_price)
+        self.progress['value']=75
 
         city_price = estimate.m_taxi(coordinates)
         print('city成功', city_price)
+        self.progress['value']=100
 
         firm_list = ['Uber', 'LINE TAXI', '台灣大車隊', '大都會計程車']
         price_list = [uber_taxi_price, line_taxi_price, tw_taxi_price, city_price]

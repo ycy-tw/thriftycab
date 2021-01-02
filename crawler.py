@@ -100,7 +100,7 @@ class Crawler:
                 uber_offer_name = offers[0].split('\n')[0]
                 uber_offer_price = float(offers[0].split('\n')[1].replace('$','').replace(',',''))
                 get_offer_yet = True
-                prin('Success, got offer')
+                print('Success, got offer')
             except:
                 print('fail to get offer')
                 pass
