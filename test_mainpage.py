@@ -1,8 +1,6 @@
 from tkinter import *
 from crawler import Crawler
 from PIL import ImageTk,Image
-import concurrent.futures
-import threading
 #from view import * #選單欄對應的各個子頁面
 
 class MainPage():
@@ -72,116 +70,76 @@ class MainPage():
         start_loc = self.start_default_variable.get()
         stop_loc = self.arrive_default_variable.get()
 
-        # 無上車地資料則通知使用者
-        if len(start_loc) == 0 :
-            messagebox.showinfo("請搜尋並選擇上車地")
+        mail = self.mail
+        pwd = self.pwd
 
-        # 無下車地資料則通知使用者
-        elif len(stop_loc) == 0 :
-            messagebox.showinfo("請搜尋並選擇下車地")
+        estimate = Crawler()
 
-        # 皆有資料則進行估算
+        # Uber的結果
+        uber_result = estimate.uber_taxi(start_loc, stop_loc)
+
+        # 把uber回傳的資源賦值
+        uber_taxi_price = uber_result[0]
+        coordinates = uber_result[1]
+        start_choice_name = uber_result[2]
+        stop_choice_name = uber_result[3]
+        uber_address_name = uber_result[4]
+
+        print('uebr成功', uber_taxi_price)
+
+        # 如果使用者沒輸入email的話，代表不使用line taxi車資估算
+        if mail is None:
+
+            line_taxi_price = 0
+            print('使用者不用line', line_taxi_price)
+
         else:
+            line_taxi_price = estimate.line_taxi(start_loc, stop_loc, mail, pwd)
+            print('line成功', line_taxi_price)
 
-            mail = self.mail
-            pwd = self.pwd
+        # 帶入其他function中估算車資
+        tw_taxi_price = estimate.tw_taxi(uber_address_name)
+        print('tw成功', tw_taxi_price)
 
-            estimate = Crawler()
+        city_price = estimate.m_taxi(coordinates)
+        print('city成功', city_price)
 
-            # # Uber的結果
-            # uber_result = estimate.uber_taxi(start_loc, stop_loc)
+        firm_list = ['Uber', 'LINE TAXI', '台灣大車隊', '大都會計程車']
+        price_list = [uber_taxi_price, line_taxi_price, tw_taxi_price, city_price]
 
-            # # 把uber回傳的資源賦值
-            # uber_taxi_price = uber_result[0]
-            # coordinates = uber_result[1]
-            # start_choice_name = uber_result[2]
-            # stop_choice_name = uber_result[3]
-            # uber_address_name = uber_result[4]
+        result = []
+        for i in range(4):
+            result.append((firm_list[i], price_list[i]))
 
-            # print('uebr成功', uber_taxi_price)
+        # 把結果由小到大排序
+        result = sorted(list(result), key=lambda x: (x[1]))
 
-            # # 如果使用者沒輸入email的話，代表不使用line taxi車資估算
-            # if mail is None:
+        # 建立一塊區域呈現結果
+        self.result_frame = Frame(self.root, bg='white')
+        self.result_frame.place(x=490, y=258)
 
-            #     line_taxi_price = 0
-            #     print('使用者不用line', line_taxi_price)
+        # 把沒結果(結果為0)的估計車資改成無估計車資
+        for i in range(len(result)):
 
-            # else:
-            #     line_taxi_price = estimate.line_taxi(start_loc, stop_loc, mail, pwd)
-            #     print('line成功', line_taxi_price)
+            firm = result[i][0]
+            fare = result[i][1]
+            check_fare = fare
 
+            if fare == 0:
+                check_fare = '無估計車資'
+            else:
+                check_fare = str('NT$ ')+str(check_fare)
 
-            # 利用平行運算同時跑uber跟line
-            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            # 由小到大呈現在畫面上
+            self.firm_name = Label(self.result_frame, text=firm, font = ("Telugu MN", 18), bg="white")
+            self.firm_name.grid(row=i, column=0)
 
-                uber_process = executor.submit(estimate.uber_taxi, start_loc, stop_loc)
-
-                # 如果使用者沒輸入email的話，代表不使用line taxi車資估算
-                if mail is None:
-
-                    line_taxi_price = 0
-                    print('使用者不用line', line_taxi_price)
-
-                else:
-
-                    line_taxi_price = executor.submit(estimate.line_taxi, start_loc, stop_loc, mail, pwd)
-                    print('line成功', line_taxi_price)
-
-            uber_result = uber_process.result()
-            line_taxi_price = line_taxi_price.result()
-
-            # 把uber回傳的資源賦值
-            uber_taxi_price = uber_result[0]
-            coordinates = uber_result[1]
-            start_choice_name = uber_result[2]
-            stop_choice_name = uber_result[3]
-            uber_address_name = uber_result[4]
-
-            # 帶入其他function中估算車資
-            tw_taxi_price = estimate.tw_taxi(uber_address_name)
-            print('tw成功', tw_taxi_price)
-
-            city_price = estimate.m_taxi(coordinates)
-            print('city成功', city_price)
-
-            firm_list = ['Uber', 'LINE TAXI', '台灣大車隊', '大都會計程車']
-            price_list = [uber_taxi_price, line_taxi_price, tw_taxi_price, city_price]
-
-            result = []
-            for i in range(4):
-                result.append((firm_list[i], price_list[i]))
-
-            # 把結果由小到大排序
-            result = sorted(list(result), key=lambda x: (x[1]))
-
-            # 建立一塊區域呈現結果
-            self.result_frame = Frame(self.root, bg='white')
-            self.result_frame.place(x=490, y=258)
-
-            # 把沒結果(結果為0)的估計車資改成無估計車資
-            for i in range(len(result)):
-
-                firm = result[i][0]
-                fare = result[i][1]
-                check_fare = fare
-
-                if fare == 0:
-                    check_fare = '無估計車資'
-                else:
-                    check_fare = str('NT$ ')+str(check_fare)
-
-                # 由小到大呈現在畫面上
-                self.firm_name = Label(self.result_frame, text=firm, font = ("Telugu MN", 18), bg="white")
-                self.firm_name.grid(row=i, column=0)
-
-                self.estimate_price = Label(self.result_frame, text=check_fare, font = ("Telugu MN", 18), bg="white")
-                self.estimate_price.grid(row=i, column=1)
+            self.estimate_price = Label(self.result_frame, text=check_fare, font = ("Telugu MN", 18), bg="white")
+            self.estimate_price.grid(row=i, column=1)
 
 
     def Reset(self):
 
-        start_loc = str()
-        stop_loc = str()
         self.start_entry.delete(0, END)
         self.arrive_entry.delete(0, END)
         self.start_location_suggestions_dropdown_list.destroy()
