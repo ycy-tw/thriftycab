@@ -195,8 +195,8 @@ class MainPage():
         self.frm_result.place(x=473, y=212)
         self.frm_result1 = Frame(width=263, height=35, background="white",relief='solid', borderwidth=2)
         self.frm_result1.place(x=473, y=212)
-        self.lbl_result = Label(text = 'Result', font = ("Telugu MN", 15), bg="white")
-        self.lbl_result.place(x=578, y=215)
+        self.lbl_result = Label(text = 'Result', font = ("Telugu MN", 13), bg="white")
+        self.lbl_result.place(x=578, y=218)
 
         # 'Reset' button
         self.reset_btn = Button(width=10, height=1, text='Reset', relief=GROOVE, font = ("Telugu MN", 20), bg='snow', command=self.Reset)
